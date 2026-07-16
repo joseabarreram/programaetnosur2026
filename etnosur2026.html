@@ -298,6 +298,68 @@
     text-overflow:ellipsis;
   }
   .tl-block b{display:block;font-size:10.5px;text-transform:uppercase;}
+  .card, .tl-block{cursor:pointer;}
+
+  /* event modal */
+  dialog.event-modal{
+    border:none;
+    border-left:6px solid var(--maroon);
+    border-radius:var(--radius);
+    padding:0;
+    width:min(92vw, 420px);
+    max-height:85vh;
+    overflow-y:auto;
+    background:var(--card-bg);
+    box-shadow:0 12px 40px rgba(0,0,0,.35);
+  }
+  dialog.event-modal::backdrop{
+    background:rgba(20,5,15,.55);
+  }
+  dialog.event-modal[open]{
+    animation:modal-in .16s ease-out;
+  }
+  @keyframes modal-in{
+    from{opacity:0; transform:translateY(8px);}
+    to{opacity:1; transform:translateY(0);}
+  }
+  .modal-body{padding:16px 18px 18px;display:flex;flex-direction:column;gap:4px;}
+  .modal-top{display:flex;align-items:center;gap:8px;}
+  .modal-title{font-size:18px;font-weight:700;margin:8px 0 0;}
+  .modal-artist{font-style:italic;font-size:13px;color:#7a5a70;}
+  .modal-meta{
+    font-size:13px;
+    color:#5a4650;
+    display:flex;
+    flex-direction:column;
+    gap:5px;
+    margin-top:8px;
+  }
+  .modal-actions{display:flex;gap:8px;margin-top:18px;}
+  .modal-actions button{
+    flex:1;
+    padding:10px 12px;
+    border-radius:10px;
+    font-size:13.5px;
+    font-weight:700;
+    cursor:pointer;
+  }
+  .btn-ghost{
+    border:1px solid var(--maroon);
+    background:#fff;
+    color:var(--maroon);
+  }
+  .btn-primary{
+    border:none;
+    background:var(--maroon);
+    color:#fff;
+  }
+  .modal-confirm{
+    margin-top:10px;
+    font-size:12.5px;
+    color:var(--green);
+    font-weight:700;
+    text-align:center;
+  }
 
   footer{
     text-align:center;
@@ -350,6 +412,10 @@
   <div id="listView"></div>
   <div id="timelineView" style="display:none;"></div>
 </main>
+
+<dialog id="eventModal" class="event-modal">
+  <div class="modal-body"></div>
+</dialog>
 
 <footer>
 Realizado por <a href="https://www.instagram.com/yosahn/">Yosahn</a> para intentar mejorar nuestra experiencia en Etnosur 🙏 <br><br>
@@ -450,6 +516,21 @@ const SUBCAT_LABELS = {
 
 let currentDay = "viernes";
 let currentView = "list";
+let currentEvents = [];
+let lastFocusedEl = null;
+
+const CATEGORY_COLORS = {
+  musica:'var(--red)', taller:'var(--green)', narracion:'var(--gold)', otros:'var(--purple)',
+  cine:'var(--teal)', circo:'var(--pink)', foro:'var(--orange)', literatura:'var(--blue)'
+};
+
+const DURATION_MIN = {
+  musica:90, circo:90, cine:120,
+  taller:60, foro:60, narracion:60, literatura:60,
+  etnochill:90, etnoteca:90
+};
+
+const DAY_DATES = { viernes:[2026,7,17], sabado:[2026,7,18], domingo:[2026,7,19] };
 
 function timeSortValue(t){
   let [h,m] = t.split(":").map(Number);
@@ -492,19 +573,20 @@ function getFilteredEvents(){
 function renderList(){
   const container = document.getElementById('listView');
   const events = getFilteredEvents();
+  currentEvents = events;
   if(events.length===0){
     container.innerHTML = '<div class="empty-msg">No hay actividades que coincidan con tu búsqueda 🔎</div>';
     return;
   }
   let html = "";
   let lastTime = null;
-  events.forEach(ev=>{
+  events.forEach((ev, idx)=>{
     if(ev.t !== lastTime){
       html += `<div class="time-label">${ev.t}h</div>`;
       lastTime = ev.t;
     }
     html += `
-      <div class="card cat-${ev.cat}${ev.sub ? ` sub-${ev.sub}` : ""}">
+      <div class="card cat-${ev.cat}${ev.sub ? ` sub-${ev.sub}` : ""}" data-idx="${idx}">
         <div class="card-top">
           <span class="badge">${ev.sub ? SUBCAT_LABELS[ev.sub] : CAT_LABELS[ev.cat]}</span>
         </div>
@@ -522,6 +604,7 @@ function renderList(){
 function renderTimeline(){
   const container = document.getElementById('timelineView');
   const events = getFilteredEvents();
+  currentEvents = events;
   if(events.length===0){
     container.innerHTML = '<div class="empty-msg">No hay actividades que coincidan con tu búsqueda 🔎</div>';
     return;
@@ -550,8 +633,9 @@ function renderTimeline(){
         return eh === h;
       });
       if(match){
-        const label = match.sub ? SUBCAT_LABELS[match.sub] : CAT_LABELS[match.cat];
-        html += `<div class="tl-cell" style="padding:2px;"><div class="tl-block cat-${match.cat}" style="background:var(--maroon);" title="${match.t}h · ${match.title} · ${match.place}"><b>${label}</b>${match.title}</div></div>`;
+        const matchLabel = match.sub ? SUBCAT_LABELS[match.sub] : CAT_LABELS[match.cat];
+        const idx = events.indexOf(match);
+        html += `<div class="tl-cell" style="padding:2px;"><div class="tl-block cat-${match.cat}" data-idx="${idx}" style="background:var(--maroon);" title="${match.t}h · ${match.title} · ${match.place}"><b>${matchLabel}</b>${match.title}</div></div>`;
       } else {
         html += `<div class="tl-cell"></div>`;
       }
@@ -582,6 +666,161 @@ function render(){
     renderTimeline();
   }
 }
+
+function slugify(str){
+  return str
+    .normalize('NFD').replace(/[\u0300-\u036f]/g,'')
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g,'-')
+    .replace(/(^-|-$)/g,'') || 'evento';
+}
+
+function pad2(n){ return String(n).padStart(2,'0'); }
+
+function eventStartUTC(ev){
+  const [y, mo, d] = DAY_DATES[currentDay];
+  let [h, m] = ev.t.split(':').map(Number);
+  const dt = new Date(Date.UTC(y, mo-1, d, h, m));
+  if(h < 9) dt.setUTCDate(dt.getUTCDate()+1); // sesiones de madrugada pertenecen al día siguiente
+  dt.setUTCHours(dt.getUTCHours() - 2); // Europe/Madrid (CEST, UTC+2) -> UTC
+  return dt;
+}
+
+function formatICSDate(dt){
+  return `${dt.getUTCFullYear()}${pad2(dt.getUTCMonth()+1)}${pad2(dt.getUTCDate())}T${pad2(dt.getUTCHours())}${pad2(dt.getUTCMinutes())}${pad2(dt.getUTCSeconds())}Z`;
+}
+
+function escapeICS(str){
+  return String(str).replace(/\\/g,'\\\\').replace(/;/g,'\\;').replace(/,/g,'\\,').replace(/\n/g,'\\n');
+}
+
+function generarICS(ev){
+  const label = ev.sub ? SUBCAT_LABELS[ev.sub] : CAT_LABELS[ev.cat];
+  const durKey = ev.sub || ev.cat;
+  const durMin = DURATION_MIN[durKey] || 60;
+
+  const start = eventStartUTC(ev);
+  const end = new Date(start.getTime() + durMin*60000);
+
+  const descParts = [];
+  if(ev.artist) descParts.push(ev.artist);
+  descParts.push(label);
+  if(ev.meta) descParts.push(ev.meta);
+
+  const uid = `${slugify(ev.title)}-${slugify(ev.place)}-${ev.t.replace(':','')}-${Date.now()}@etnosur2026`;
+
+  return [
+    'BEGIN:VCALENDAR',
+    'VERSION:2.0',
+    'PRODID:-//Etnosur 2026//Programacion//ES',
+    'BEGIN:VEVENT',
+    `UID:${uid}`,
+    `DTSTAMP:${formatICSDate(new Date())}`,
+    `DTSTART:${formatICSDate(start)}`,
+    `DTEND:${formatICSDate(end)}`,
+    `SUMMARY:${escapeICS(ev.title)}`,
+    `LOCATION:${escapeICS(ev.place)}`,
+    `DESCRIPTION:${escapeICS(descParts.join(' · '))}`,
+    'END:VEVENT',
+    'END:VCALENDAR'
+  ].join('\r\n');
+}
+
+function descargarICS(ev){
+  const blob = new Blob([generarICS(ev)], {type:'text/calendar;charset=utf-8'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `${slugify(ev.title)}.ics`;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  setTimeout(()=>URL.revokeObjectURL(url), 1000);
+
+  const confirm = document.getElementById('eventModal').querySelector('.modal-confirm');
+  if(confirm){
+    confirm.hidden = false;
+    setTimeout(()=>{ confirm.hidden = true; }, 3000);
+  }
+}
+
+function getFocusableEls(container){
+  return [...container.querySelectorAll('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])')]
+    .filter(el=>!el.disabled);
+}
+
+const eventModal = document.getElementById('eventModal');
+
+function abrirModal(ev){
+  if(!ev) return;
+  lastFocusedEl = document.activeElement;
+  const label = ev.sub ? SUBCAT_LABELS[ev.sub] : CAT_LABELS[ev.cat];
+  const colorKey = ev.sub || ev.cat;
+  const color = CATEGORY_COLORS[colorKey] || 'var(--maroon)';
+
+  eventModal.className = `event-modal cat-${ev.cat}${ev.sub ? ` sub-${ev.sub}` : ""}`;
+  eventModal.querySelector('.modal-body').innerHTML = `
+    <div class="modal-top">
+      <span class="badge">${label}</span>
+    </div>
+    <div class="modal-title">${ev.title}</div>
+    ${ev.artist ? `<div class="modal-artist">${ev.artist}</div>` : ""}
+    <div class="modal-meta">
+      <span>📍 ${ev.place}</span>
+      <span>🕐 ${ev.t}h</span>
+      ${ev.meta ? `<span>👥 ${ev.meta}</span>` : ""}
+    </div>
+    <div class="modal-actions">
+      <button type="button" class="btn-ghost" id="modalBack">Volver atrás</button>
+      <button type="button" class="btn-primary" id="modalAddCal">📅 Añadir al calendario</button>
+    </div>
+    <div class="modal-confirm" hidden>✅ Evento descargado</div>
+  `;
+
+  const addBtn = eventModal.querySelector('#modalAddCal');
+  addBtn.style.background = color;
+  addBtn.style.color = colorKey === 'narracion' ? 'var(--ink)' : '#fff';
+  addBtn.addEventListener('click', ()=> descargarICS(ev));
+  eventModal.querySelector('#modalBack').addEventListener('click', cerrarModal);
+
+  eventModal.showModal();
+}
+
+function cerrarModal(){
+  eventModal.close();
+}
+
+eventModal.addEventListener('click', e=>{
+  if(e.target === eventModal) cerrarModal();
+});
+
+eventModal.addEventListener('keydown', e=>{
+  if(e.key !== 'Tab') return;
+  const focusables = getFocusableEls(eventModal);
+  if(focusables.length === 0) return;
+  const first = focusables[0], last = focusables[focusables.length-1];
+  if(e.shiftKey && document.activeElement === first){
+    e.preventDefault(); last.focus();
+  } else if(!e.shiftKey && document.activeElement === last){
+    e.preventDefault(); first.focus();
+  }
+});
+
+eventModal.addEventListener('close', ()=>{
+  if(lastFocusedEl) lastFocusedEl.focus();
+});
+
+document.getElementById('listView').addEventListener('click', e=>{
+  const card = e.target.closest('.card');
+  if(!card) return;
+  abrirModal(currentEvents[Number(card.dataset.idx)]);
+});
+
+document.getElementById('timelineView').addEventListener('click', e=>{
+  const block = e.target.closest('.tl-block');
+  if(!block) return;
+  abrirModal(currentEvents[Number(block.dataset.idx)]);
+});
 
 document.getElementById('dayNav').addEventListener('click', e=>{
   const btn = e.target.closest('button');
