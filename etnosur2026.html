@@ -219,20 +219,18 @@
   .cat-musica .badge{background:var(--red);}
   .cat-taller{border-left-color:var(--green);}
   .cat-taller .badge{background:var(--green);}
-  .cat-etnochill{border-left-color:var(--teal);}
-  .cat-etnochill .badge{background:var(--teal);}
   .cat-narracion{border-left-color:var(--gold);}
   .cat-narracion .badge{background:var(--gold);color:var(--ink);}
-  .cat-cine{border-left-color:var(--maroon);}
-  .cat-cine .badge{background:var(--maroon);}
-  .cat-circo{border-left-color:var(--pink);}
-  .cat-circo .badge{background:var(--pink);}
-  .cat-foro{border-left-color:var(--orange);}
-  .cat-foro .badge{background:var(--orange);}
-  .cat-literatura{border-left-color:var(--purple);}
-  .cat-literatura .badge{background:var(--purple);}
-  .cat-etnoteca{border-left-color:var(--blue);}
-  .cat-etnoteca .badge{background:var(--blue);}
+  .cat-otros{border-left-color:var(--purple);}
+  .cat-otros .badge{background:var(--purple);}
+  .cat-otros.sub-cine{border-left-color:var(--teal);}
+  .cat-otros.sub-cine .badge{background:var(--teal);}
+  .cat-otros.sub-circo{border-left-color:var(--pink);}
+  .cat-otros.sub-circo .badge{background:var(--pink);}
+  .cat-otros.sub-foro{border-left-color:var(--orange);}
+  .cat-otros.sub-foro .badge{background:var(--orange);}
+  .cat-otros.sub-literatura{border-left-color:var(--blue);}
+  .cat-otros.sub-literatura .badge{background:var(--blue);}
 
   /* timeline view */
   .timeline-wrap{
@@ -263,7 +261,12 @@
     color:var(--maroon);
     padding:6px 2px;
     position:sticky;
-    top:0;
+    left:0;
+    z-index:5;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    min-width:62px;
   }
   .tl-venuelabel{
     font-size:11px;
@@ -272,10 +275,12 @@
     color:var(--maroon);
     padding:6px 4px;
     position:sticky;
-    left:0;
+    top:0;
     z-index:5;
     display:flex;
     align-items:center;
+    justify-content:center;
+    text-align:center;
     min-width:118px;
   }
   .tl-block{
@@ -290,7 +295,7 @@
     white-space:nowrap;
     text-overflow:ellipsis;
   }
-  .tl-block b{display:block;font-size:10.5px;}
+  .tl-block b{display:block;font-size:10.5px;text-transform:uppercase;}
 
   footer{
     text-align:center;
@@ -368,20 +373,20 @@ const DATA = {
     {t:"12:30",cat:"taller",title:"Explosión de colores: crea tus calcetines Tie Dye",place:"Paseo de los Álamos",artist:"TintArte Tie Dye",meta:"Aforo 25 · De 5 a 14 años"},
     {t:"12:30",cat:"taller",title:"Moda y sostenibilidad",place:"Convento de Capuchinos",artist:"María Jesús Pérez",meta:"Aforo 25 · A partir de 16 años"},
     {t:"12:30",cat:"taller",title:"Moral en el arte urbano",place:"Lonja Convento de Capuchinos",artist:"Serengueti Art",meta:"Aforo 25 · 👦🏻 A partir de 6 años"},
-    {t:"12:30",cat:"foro",title:"Hablemos del clima futuro: recursos hídricos y adaptación a la nueva realidad del cambio climático",place:"Palacio Abacial",artist:"Juan Antonio Carazo (CEO de Andalmet)",meta:"Aforo 80"},
+    {t:"12:30",cat:"otros",sub:"foro",title:"Hablemos del clima futuro: recursos hídricos y adaptación a la nueva realidad del cambio climático",place:"Palacio Abacial",artist:"Juan Antonio Carazo (CEO de Andalmet)",meta:"Aforo 80"},
     {t:"14:00",cat:"musica",title:"Ben Zabo",place:"Plaza del Ayuntamiento"},
-    {t:"15:30",cat:"etnochill",title:"Castora Herz DJ",place:"Plaza del Ayuntamiento"},
-    {t:"17:30",cat:"etnochill",title:"María Calaveras",place:"Paseo de los Álamos"},
+    {t:"15:30",cat:"musica",title:"Castora Herz DJ",place:"Plaza del Ayuntamiento"},
+    {t:"17:30",cat:"musica",title:"María Calaveras",place:"Paseo de los Álamos"},
     {t:"18:00",cat:"taller",title:"«Migraciones de ida y vuelta». Memoria, derechos y convivencia",place:"Lonja Convento de Capuchinos",artist:"Asociación La Comunitaria",meta:"Aforo 25 · 👦🏻 A partir de 6 años"},
     {t:"19:00",cat:"narracion",title:"Rayanas (Narración para adultos)",place:"Pub L@Lola",artist:"Irene Reina",meta:"Aforo 100"},
-    {t:"19:00",cat:"cine",title:"Mediterráneo",place:"Teatro Martínez Montañés",artist:"Marcel Barrena (2021)",meta:"Aforo 300"},
-    {t:"19:15",cat:"etnochill",title:"Dj Simpson",place:"Paseo de los Álamos"},
+    {t:"19:00",cat:"otros",sub:"cine",title:"Mediterráneo",place:"Teatro Martínez Montañés",artist:"Marcel Barrena (2021)",meta:"Aforo 300"},
+    {t:"19:15",cat:"musica",title:"Dj Simpson",place:"Paseo de los Álamos"},
     {t:"20:00",cat:"musica",title:"The Zawose Queens",place:"Plaza del Ayuntamiento"},
-    {t:"20:30",cat:"circo",title:"POI",place:"Patio CEIP Alonso Alcalá",artist:"Cía. D'Estro · presentado por Carolina Montoya"},
+    {t:"20:30",cat:"otros",sub:"circo",title:"POI",place:"Patio CEIP Alonso Alcalá",artist:"Cía. D'Estro · presentado por Carolina Montoya"},
     {t:"22:30",cat:"musica",title:"Los Van Van",place:"Recinto ferial"},
     {t:"00:30",cat:"musica",title:"Fillas de Cassandra",place:"Recinto ferial"},
     {t:"02:30",cat:"musica",title:"Ácido Pantera",place:"Recinto ferial"},
-    {t:"04:00",cat:"etnoteca",title:"Telephunken",place:"Recinto ferial"},
+    {t:"04:00",cat:"musica",title:"Telephunken",place:"Recinto ferial"},
   ],
   sabado: [
     {t:"10:00",cat:"taller",title:"Viaje por los 4 elementos a través del yoga & vibración",place:"Plaza del Ayuntamiento",artist:"Elena Sánchez (Centro Bôsukha)",meta:"Aforo 50 · A partir de 15 años"},
@@ -392,25 +397,25 @@ const DATA = {
     {t:"11:00",cat:"narracion",title:"Cuentos crudos (Narración infantil)",place:"Convento de Capuchinos",artist:"Irene Reina",meta:"Aforo 150"},
     {t:"11:00",cat:"taller",title:"Circo (bola de equilibrio, mini trampolín, malabares, diábolo, rola bola y slackline)",place:"Silo",artist:"Cía. Vol'e Temps Circo Teatro",meta:"Aforo 200"},
     {t:"12:00",cat:"taller",title:"Ritmos latinos",place:"Templete Paseo de los Álamos",artist:"María Sánchez",meta:"Aforo 25"},
-    {t:"12:00",cat:"foro",title:"Inmortalidad: vivir más, ¿vivir mejor? Avances científicos y retos sociales más allá de los límites",place:"Palacio Abacial",artist:"Juan Antonio Valor Yébenes, Antonio García Jiménez y Graziella Almendral",meta:"Aforo 80"},
+    {t:"12:00",cat:"otros",sub:"foro",title:"Inmortalidad: vivir más, ¿vivir mejor? Avances científicos y retos sociales más allá de los límites",place:"Palacio Abacial",artist:"Juan Antonio Valor Yébenes, Antonio García Jiménez y Graziella Almendral",meta:"Aforo 80"},
     {t:"12:30",cat:"taller",title:"Mini-hotel de insectos",place:"Lonja Convento de Capuchinos",artist:"Ecoluciona",meta:"Aforo 25 · 🧒🏾 A partir de 4 años"},
     {t:"12:30",cat:"taller",title:"Explosión de colores: crea tus calcetines Tie Dye",place:"Lonja Convento de Capuchinos",artist:"TintArte Tie Dye",meta:"Aforo 25 · De 5 a 14 años"},
     {t:"12:30",cat:"taller",title:"Moda y sostenibilidad",place:"Convento de Capuchinos",artist:"María Jesús Pérez",meta:"Aforo 25 · A partir de 16 años"},
     {t:"12:30",cat:"taller",title:"Moral en el arte urbano",place:"Lonja Convento de Capuchinos",artist:"Serengueti Art",meta:"Aforo 25 · 👦🏻 A partir de 6 años"},
     {t:"14:00",cat:"musica",title:"Lucky Salvadori",place:"Plaza del Ayuntamiento"},
-    {t:"15:30",cat:"etnochill",title:"Cous Cous",place:"Plaza del Ayuntamiento"},
-    {t:"17:30",cat:"etnochill",title:"Dj Borke",place:"Paseo de los Álamos"},
+    {t:"15:30",cat:"musica",title:"Cous Cous",place:"Plaza del Ayuntamiento"},
+    {t:"17:30",cat:"musica",title:"Dj Borke",place:"Paseo de los Álamos"},
     {t:"18:00",cat:"taller",title:"Ritmos gitanos: percusión flamenca",place:"Lonja Convento de Capuchinos",artist:"Asociación La Comunitaria",meta:"Aforo 15 · 👦🏻 A partir de 6 años"},
     {t:"18:00",cat:"taller",title:"Serigrafía",place:"Convento de Capuchinos",artist:"Greenpeace",meta:"Aforo 15 · A partir de 8 años"},
     {t:"19:00",cat:"narracion",title:"Contar con los amigos (Narración para adultos)",place:"Pub L@Lola",artist:"Nono Granero",meta:"Aforo 100"},
-    {t:"19:00",cat:"cine",title:"Proyecto tiempo",place:"Teatro Martínez Montañés",artist:"Isabel Coixet (2018)"},
-    {t:"19:15",cat:"etnochill",title:"Giuseppe Beats",place:"Paseo de los Álamos"},
+    {t:"19:00",cat:"otros",sub:"cine",title:"Proyecto tiempo",place:"Teatro Martínez Montañés",artist:"Isabel Coixet (2018)"},
+    {t:"19:15",cat:"musica",title:"Giuseppe Beats",place:"Paseo de los Álamos"},
     {t:"20:00",cat:"musica",title:"D'Chipen",place:"Plaza del Ayuntamiento"},
-    {t:"20:30",cat:"circo",title:"Cabaret",place:"Patio CEIP Alonso Alcalá",artist:"Cía. Zen del Sur, Cía. Andrea Ríos, Cía. Ymedio Teatro, Elenia Anastasaki (Cía. LaEleArt) y Cía. Arsa La Brasa · presentado por Carolina Montoya"},
+    {t:"20:30",cat:"otros",sub:"circo",title:"Cabaret",place:"Patio CEIP Alonso Alcalá",artist:"Cía. Zen del Sur, Cía. Andrea Ríos, Cía. Ymedio Teatro, Elenia Anastasaki (Cía. LaEleArt) y Cía. Arsa La Brasa · presentado por Carolina Montoya"},
     {t:"22:30",cat:"musica",title:"Dhoad Gypsies of Rajasthan",place:"Recinto ferial"},
     {t:"00:30",cat:"musica",title:"Kanazoé Orkestra",place:"Recinto ferial"},
     {t:"02:30",cat:"musica",title:"Asian Dub Foundation",place:"Recinto ferial"},
-    {t:"04:00",cat:"etnoteca",title:"Marcos Boricua",place:"Recinto ferial"},
+    {t:"04:00",cat:"musica",title:"Marcos Boricua",place:"Recinto ferial"},
   ],
   domingo: [
     {t:"10:00",cat:"taller",title:"Viaje por los 4 elementos a través del yoga & vibración",place:"Plaza del Ayuntamiento",artist:"Elena Sánchez (Centro Bôsukha)",meta:"Aforo 50 · A partir de 15 años"},
@@ -421,18 +426,21 @@ const DATA = {
     {t:"10:30",cat:"taller",title:"Serigrafía",place:"Convento de Capuchinos",artist:"Greenpeace",meta:"Aforo 15 · A partir de 8 años"},
     {t:"11:00",cat:"taller",title:"Circo (bola de equilibrio, mini trampolín, malabares, diábolo, rola bola y slackline)",place:"Silo",artist:"Cía. Vol'e Temps Circo Teatro",meta:"Aforo 200"},
     {t:"12:00",cat:"taller",title:"Ritmos latinos",place:"Templete Paseo de los Álamos",artist:"María Sánchez",meta:"Aforo 25"},
-    {t:"12:00",cat:"literatura",title:"Música y poesía (Aula de literatura)",place:"Teatro Martínez Montañés",artist:"Benjamín Prado y Shuarma",meta:"Aforo 300"},
+    {t:"12:00",cat:"otros",sub:"literatura",title:"Música y poesía (Aula de literatura)",place:"Teatro Martínez Montañés",artist:"Benjamín Prado y Shuarma",meta:"Aforo 300"},
     {t:"12:00",cat:"taller",title:"Moral en el arte urbano",place:"Lonja Convento de Capuchinos",artist:"Serengueti Art",meta:"Aforo 25 · 👦🏻 A partir de 6 años"},
     {t:"12:30",cat:"taller",title:"Mini-hotel de insectos",place:"Lonja Convento de Capuchinos",artist:"Ecoluciona",meta:"Aforo 25 · 🧒🏾 A partir de 4 años"},
     {t:"12:30",cat:"taller",title:"Explosión de colores: crea tus calcetines Tie Dye",place:"Lonja Convento de Capuchinos",artist:"TintArte Tie Dye",meta:"Aforo 25 · De 5 a 14 años"},
     {t:"12:30",cat:"taller",title:"Moda y sostenibilidad",place:"Convento de Capuchinos",artist:"María Jesús Pérez",meta:"Aforo 25 · A partir de 16 años"},
-    {t:"14:00",cat:"etnochill",title:"Nûra & Pierrot",place:"Paseo de los Álamos"},
+    {t:"14:00",cat:"musica",title:"Nûra & Pierrot",place:"Paseo de los Álamos"},
   ]
 };
 
 const CAT_LABELS = {
-  musica:"Música", taller:"Taller", etnochill:"Etnochill", narracion:"Narración",
-  cine:"Cine", circo:"Circo", foro:"Foro", literatura:"Aula de literatura", etnoteca:"Etnoteca"
+  musica:"Música", taller:"Talleres", narracion:"Narración", otros:"Otras"
+};
+
+const SUBCAT_LABELS = {
+  cine:"Cine", circo:"Circo", foro:"Foro", literatura:"Literatura"
 };
 
 let currentDay = "viernes";
@@ -491,9 +499,9 @@ function renderList(){
       lastTime = ev.t;
     }
     html += `
-      <div class="card cat-${ev.cat}">
+      <div class="card cat-${ev.cat}${ev.sub ? ` sub-${ev.sub}` : ""}">
         <div class="card-top">
-          <span class="badge">${CAT_LABELS[ev.cat]}</span>
+          <span class="badge">${ev.sub ? SUBCAT_LABELS[ev.sub] : CAT_LABELS[ev.cat]}</span>
         </div>
         <div class="card-title">${ev.title}</div>
         ${ev.artist ? `<div class="card-artist">${ev.artist}</div>` : ""}
@@ -517,19 +525,19 @@ function renderTimeline(){
   const hours = [];
   for(let h=10; h<=28; h++) hours.push(h);
 
-  let gridCols = `118px repeat(${hours.length}, 62px)`;
+  let gridCols = `62px repeat(${venues.length}, 118px)`;
   let html = `<div class="timeline-wrap"><div class="timeline" style="grid-template-columns:${gridCols}">`;
 
   // header row
-  html += `<div class="tl-cell tl-venuelabel" style="position:sticky;left:0;top:0;z-index:6;">Escenario</div>`;
+  html += `<div class="tl-cell tl-hourlabel" style="position:sticky;left:0;top:0;z-index:6;">Hora</div>`;
+  venues.forEach(venue=>{
+    html += `<div class="tl-cell tl-venuelabel">${venue}</div>`;
+  });
+
   hours.forEach(h=>{
     const label = h>=24 ? String(h-24).padStart(2,'0')+"h" : String(h).padStart(2,'0')+"h";
     html += `<div class="tl-cell tl-hourlabel">${label}</div>`;
-  });
-
-  venues.forEach(venue=>{
-    html += `<div class="tl-cell tl-venuelabel">${venue}</div>`;
-    hours.forEach(h=>{
+    venues.forEach(venue=>{
       const match = events.find(ev=>{
         if(ev.place!==venue) return false;
         let [eh] = ev.t.split(":").map(Number);
@@ -537,7 +545,8 @@ function renderTimeline(){
         return eh === h;
       });
       if(match){
-        html += `<div class="tl-cell" style="padding:2px;"><div class="tl-block cat-${match.cat}" style="background:var(--maroon);" title="${match.t}h · ${match.title} · ${match.place}"><b>${match.t}</b>${match.title}</div></div>`;
+        const label = match.sub ? SUBCAT_LABELS[match.sub] : CAT_LABELS[match.cat];
+        html += `<div class="tl-cell" style="padding:2px;"><div class="tl-block cat-${match.cat}" style="background:var(--maroon);" title="${match.t}h · ${match.title} · ${match.place}"><b>${label}</b>${match.title}</div></div>`;
       } else {
         html += `<div class="tl-cell"></div>`;
       }
@@ -551,7 +560,7 @@ function renderTimeline(){
   container.querySelectorAll('.tl-block').forEach(el=>{
     const catClass = [...el.classList].find(c=>c.startsWith('cat-'));
     const cat = catClass ? catClass.replace('cat-','') : null;
-    const colorMap = {musica:'var(--red)',taller:'var(--green)',etnochill:'var(--teal)',narracion:'var(--gold)',cine:'var(--maroon)',circo:'var(--pink)',foro:'var(--orange)',literatura:'var(--purple)',etnoteca:'var(--blue)'};
+    const colorMap = {musica:'var(--red)',taller:'var(--green)',narracion:'var(--gold)',otros:'var(--purple)'};
     if(cat && colorMap[cat]) el.style.background = colorMap[cat];
     if(cat==='narracion') el.style.color = 'var(--ink)';
   });
