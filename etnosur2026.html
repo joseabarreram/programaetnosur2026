@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+<title>Etnosur 2026 · Programación</title>
+<style>
+  :root{
+    --bg-dark:#3d0f2e;
+    --maroon:#7a1f4e;
+    --maroon-light:#9c2d68;
+    --pink:#e8749a;
+    --salmon:#f3aeb8;
+    --red:#e2231a;
+    --gold:#f2b400;
+    --green:#1f8a4c;
+    --teal:#127a7a;
+    --orange:#e0631f;
+    --purple:#7a3b8f;
+    --blue:#2464a8;
+    --cream:#fdf1cf;
+    --white:#ffffff;
+    --ink:#2b0f22;
+    --card-bg:#ffffff;
+    --page-bg:#fbeee0;
+    --radius:14px;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:var(--page-bg);
+    color:var(--ink);
+    -webkit-font-smoothing:antialiased;
+  }
+  .display-font{
+    font-family:"Baloo 2","Fredoka","Comic Sans MS",-apple-system,sans-serif;
+    font-weight:700;
+  }
+  header{
+    background:linear-gradient(160deg,var(--maroon) 0%, var(--bg-dark) 100%);
+    color:var(--cream);
+    padding:18px 16px 14px;
+    position:sticky;
+    top:0;
+    z-index:50;
+    box-shadow:0 3px 10px rgba(0,0,0,.25);
+  }
+  .logo-row{display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+  .logo-svg{
+    height:38px;
+    width:auto;
+    background:#fff;
+    border-radius:8px;
+    padding:4px 8px;
+  }
+  .subtitle{font-size:12.5px;opacity:.85;margin-top:2px;}
+
+  nav.days{
+    display:flex;
+    gap:6px;
+    margin-top:14px;
+    background:rgba(0,0,0,.18);
+    border-radius:999px;
+    padding:4px;
+  }
+  nav.days button{
+    flex:1;
+    border:none;
+    background:transparent;
+    color:var(--cream);
+    padding:9px 4px;
+    border-radius:999px;
+    font-size:13.5px;
+    font-weight:700;
+    cursor:pointer;
+    transition:.15s;
+  }
+  nav.days button.active{
+    background:var(--gold);
+    color:var(--ink);
+  }
+
+  .controls{
+    padding:12px 16px 4px;
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+    background:var(--page-bg);
+    position:sticky;
+    top:118px;
+    z-index:40;
+    border-bottom:1px solid rgba(0,0,0,.06);
+  }
+  .search-row{position:relative;}
+  .search-row input{
+    width:100%;
+    padding:10px 12px 10px 34px;
+    border-radius:999px;
+    border:1px solid #d8c3ab;
+    font-size:14px;
+    background:#fff;
+  }
+  .search-row::before{
+    content:"🔍";
+    position:absolute;
+    left:12px;
+    top:9px;
+    font-size:13px;
+    opacity:.6;
+  }
+  .filter-row{
+    display:flex;
+    gap:8px;
+    flex-wrap:wrap;
+  }
+  .filter-row select{
+    flex:1;
+    min-width:120px;
+    padding:9px 8px;
+    border-radius:10px;
+    border:1px solid #d8c3ab;
+    background:#fff;
+    font-size:13px;
+  }
+  .view-toggle{
+    display:flex;
+    gap:6px;
+  }
+  .view-toggle button{
+    flex:1;
+    border:1px solid var(--maroon);
+    background:#fff;
+    color:var(--maroon);
+    padding:8px 6px;
+    border-radius:10px;
+    font-size:13px;
+    font-weight:700;
+    cursor:pointer;
+  }
+  .view-toggle button.active{
+    background:var(--maroon);
+    color:#fff;
+  }
+
+  main{padding:12px 12px 60px;}
+
+  .note-banner{
+    background:var(--cream);
+    border:1px solid var(--gold);
+    border-radius:10px;
+    padding:9px 12px;
+    font-size:12.5px;
+    margin-bottom:12px;
+    display:flex;
+    gap:8px;
+    align-items:flex-start;
+  }
+  .note-banner b{color:var(--maroon);}
+
+  .time-group{margin-bottom:6px;}
+  .time-label{
+    font-size:13px;
+    font-weight:700;
+    color:var(--maroon);
+    margin:16px 0 6px;
+    padding-left:2px;
+  }
+
+  .card{
+    background:var(--card-bg);
+    border-radius:var(--radius);
+    padding:11px 12px;
+    margin-bottom:8px;
+    box-shadow:0 1px 4px rgba(0,0,0,.08);
+    border-left:6px solid var(--maroon);
+    display:flex;
+    flex-direction:column;
+    gap:3px;
+  }
+  .card-top{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:8px;
+  }
+  .badge{
+    font-size:10.5px;
+    font-weight:700;
+    text-transform:uppercase;
+    letter-spacing:.4px;
+    padding:2px 8px;
+    border-radius:999px;
+    color:#fff;
+    white-space:nowrap;
+  }
+  .card-title{
+    font-size:15.5px;
+    font-weight:700;
+    margin:2px 0 0;
+  }
+  .card-meta{
+    font-size:12.5px;
+    color:#5a4650;
+    display:flex;
+    flex-wrap:wrap;
+    gap:4px 10px;
+  }
+  .card-artist{font-style:italic;font-size:12.5px;color:#7a5a70;}
+  .empty-msg{
+    text-align:center;
+    color:#8a7080;
+    padding:40px 10px;
+    font-size:14px;
+  }
+
+  /* category colors */
+  .cat-musica{border-left-color:var(--red);}
+  .cat-musica .badge{background:var(--red);}
+  .cat-taller{border-left-color:var(--green);}
+  .cat-taller .badge{background:var(--green);}
+  .cat-etnochill{border-left-color:var(--teal);}
+  .cat-etnochill .badge{background:var(--teal);}
+  .cat-narracion{border-left-color:var(--gold);}
+  .cat-narracion .badge{background:var(--gold);color:var(--ink);}
+  .cat-cine{border-left-color:var(--maroon);}
+  .cat-cine .badge{background:var(--maroon);}
+  .cat-circo{border-left-color:var(--pink);}
+  .cat-circo .badge{background:var(--pink);}
+  .cat-foro{border-left-color:var(--orange);}
+  .cat-foro .badge{background:var(--orange);}
+  .cat-literatura{border-left-color:var(--purple);}
+  .cat-literatura .badge{background:var(--purple);}
+  .cat-etnoteca{border-left-color:var(--blue);}
+  .cat-etnoteca .badge{background:var(--blue);}
+
+  /* timeline view */
+  .timeline-wrap{
+    overflow-x:auto;
+    border-radius:var(--radius);
+    background:#fff;
+    box-shadow:0 1px 4px rgba(0,0,0,.08);
+  }
+  .timeline{
+    display:grid;
+    min-width:1400px;
+  }
+  .tl-header,.tl-row{
+    display:contents;
+  }
+  .tl-cell{
+    border-bottom:1px solid #eee2d5;
+    border-right:1px solid #eee2d5;
+    padding:4px;
+    position:relative;
+    min-height:46px;
+  }
+  .tl-hourlabel{
+    font-size:10.5px;
+    font-weight:700;
+    text-align:center;
+    background:var(--cream);
+    color:var(--maroon);
+    padding:6px 2px;
+    position:sticky;
+    top:0;
+  }
+  .tl-venuelabel{
+    font-size:11px;
+    font-weight:700;
+    background:var(--cream);
+    color:var(--maroon);
+    padding:6px 4px;
+    position:sticky;
+    left:0;
+    z-index:5;
+    display:flex;
+    align-items:center;
+    min-width:118px;
+  }
+  .tl-block{
+    background:var(--maroon);
+    color:#fff;
+    border-radius:6px;
+    font-size:10px;
+    padding:3px 4px;
+    line-height:1.25;
+    cursor:default;
+    overflow:hidden;
+    white-space:nowrap;
+    text-overflow:ellipsis;
+  }
+  .tl-block b{display:block;font-size:10.5px;}
+
+  footer{
+    text-align:center;
+    font-size:11px;
+    color:#8a7080;
+    padding:16px 10px 30px;
+  }
+  a.credit{color:var(--maroon);}
+
+  @media (min-width:700px){
+    main{padding:16px 24px 60px;max-width:900px;margin:0 auto;}
+    .controls{padding:14px 24px 6px;top:126px;max-width:900px;margin:0 auto;}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo-row">
+    <svg class="logo-svg" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" id="Capa_2" data-name="Capa 2" viewBox="0 0 414.06 168.28"><defs><style>      .cls-1 {        fill: #208b69;      }      .cls-1, .cls-2, .cls-3, .cls-4, .cls-5 {        stroke-width: 0px;      }      .cls-2 {        fill: #d68e08;      }      .cls-3 {        fill: #a92e4f;      }      .cls-4 {        fill: #f2ce16;      }      .cls-5 {        fill: #da1b1e;      }    </style><symbol id="restyling_1" data-name="restyling 1" viewBox="0 0 362.83 147.46"><g><path class="cls-3" d="M16.15,68.84s.42-8.91,6.61-20.98c3.78-7.35,7.9-11,9.65-13.73,2.06-3.21-2.52-7.13-8.39-3.57-7.4,4.49-17.71,16.55-21.32,28.7-6.01,20.24-2.26,36.5,13.98,54.25,16.76,18.31,33.28,10.77,26.43-.28-5.28-8.51-18.62-10.62-25.19-28.28,0,0,14.09-6.51,20.86-9.61s3.92-9.37.28-9.65c-7.79-.6-22.91,3.14-22.91,3.14Z"></path><path class="cls-5" d="M82.02,37.72c-3.03-.37-6.27-.56-9.44-.66,1.19-8.33,3.74-21.87,5.25-30.69C78.91.04,74.86-.45,72.23.23s-4.8,5.02-6.05,7.62c-2.54,5.33-6.2,14.05-9.25,29-4.37-.15-12.58-.25-15.04,2.13-4.16,4.01,1.1,10.64,13.54,10.42-2.19,44.22,2.69,66.69,7.53,71.22,3.86,3.61,12.07.86,10.53-6.69-1.46-7.15-7.62-21.13-3.42-63.45,4.24.31,8.78.91,10.97.81,6.43-.28,8.95-12.58.98-13.56Z"></path><path class="cls-4" d="M184.83,37.3c-13.14-.02-22.65,10.63-25.35,26.19-2.43,13.99,2.35,29.66,8.39,37.47,12.68,16.41,37.38,5.87,39.24-20.23,1.45-20.31,1.06-43.39-22.28-43.44ZM197.97,71.43c-1.49,15-9.88,23.2-15.38,22.17-4.11-.77-7.92-4.57-9.97-13.42-3.56-15.38,2.88-30.98,13.52-30.57,12.12.47,13.2,8.17,11.84,21.82Z"></path><path class="cls-1" d="M309.83,115.07c-6.59-6.68-9.71-16.67-10.72-25.95-.83-7.58-1.78-18.21-3.23-34.52-.48-5.46-1.21-12.85-7.15-11.45-4.44,1.04-4.6,6.63-3.8,18.78.75,11.28,1.88,26.63,2.05,29.55.48,7.99.94,18.05-6.47,18-15.52-.1-13.48-38.55-14.32-57.81-.42-9.64-2.97-10.96-6.13-10.56-5.34.68-7.06,6.64-6.76,31.28.26,21.71,5.15,51.98,27.26,52.61,6.44.18,10.57-3.67,14.01-7.31,2.13,3.45,7.62,11.97,12.84,10.01,6.85-2.57,6.71-8.3,2.43-12.65Z"></path><path class="cls-1" d="M325.77,44.89s-1.77-12.96-5.03-17.15-9.97-2.05-9.88,1.68c.09,3.73,5.5,39.87,6.2,45.87s3.22,38.02,3.92,45.15c.7,7.13,12.44,5.59,14.12,0,1.68-5.59-.98-36.35-1.26-48.1-.28-11.75,2.19-24.21,20.97-37.33,10.21-7.13,8.25-9.51,6.99-12.02s-12.77-8.06-36.03,21.91Z"></path><path class="cls-1" d="M205.4,134.48c-6.22-1.54-8-10.32,2.66-12.44,6.95-1.39,11.47-.47,18.27-5.31,13.57-9.66,1.97-26.11-1.18-32.95-4.12-8.95-8.79-19.09-8.33-30.84.94-24.03,17.67-33.52,30.11-34.44,15.63-1.15,11.75,11.4,5.04,14.44-6.22,2.81-18.91,7.2-19.44,20.73-.32,8.09.95,15.97,4.52,23.72,3.85,8.36,17.61,36.19-2.84,50.94-5.71,4.12-20.57,8.19-28.8,6.15Z"></path><path class="cls-2" d="M41.95,136.32c42.61-10.77,95.18-13.38,135.84-8.03,7.08.93,4.19,12.4-5.2,11.17-63.41-8.28-109.97,3.6-128.65,7.89-5.38,1.24-10.5-8.88-1.98-11.03Z"></path><path class="cls-2" d="M146.75,22.13c-2.03-6.64-11.4-5.66-11.12,6.78.28,12.44-1.9,52.02-1.9,52.02,0,0-13.72-20.65-23.9-34.96-5.87-8.25-13.56-4.54-14.54,6.08-1.34,14.5-7.34,46.35-8.74,54.04-1.4,7.69-3.22,14.93,4.75,12.43,7.97-2.5,14.4-54.65,14.4-54.65,0,0,8.53,13.12,17.29,26.8,8.55,13.36,12.55,21.16,16.56,22.99,2.23,1.02,4.65,1.2,6.41-2.73,6.14-12.91,3.06-81.4.79-88.8Z"></path></g></symbol></defs><g id="Capa_1-2" data-name="Capa 1"><use width="362.83" height="147.46" transform="scale(1.14)" xlink:href="#restyling_1"></use></g></svg>
+    <div class="subtitle">16–19 julio 2026 · Alcalá la Real, Jaén</div>
+  </div>
+  <nav class="days" id="dayNav">
+    <button data-day="viernes" class="active">VIERNES 17</button>
+    <button data-day="sabado">SÁBADO 18</button>
+    <button data-day="domingo">DOMINGO 19</button>
+  </nav>
+</header>
+
+<div class="controls">
+  <div class="search-row">
+    <input type="text" id="searchInput" placeholder="Buscar artista o actividad...">
+  </div>
+  <div class="filter-row">
+    <select id="stageFilter"><option value="">Todos los escenarios</option></select>
+    <select id="catFilter"><option value="">Todas las actividades</option></select>
+  </div>
+  <div class="view-toggle">
+    <button data-view="list" class="active">📋 Lista</button>
+    <button data-view="timeline">🕐 Calendario</button>
+  </div>
+</div>
+
+<main>
+  <div class="note-banner">
+    <span>ℹ️</span>
+    <div><b>Talleres:</b> llega al menos <b>1 hora antes</b> para hacer cola y recoger tu ticket de participación (15 min antes como mínimo imprescindible).</div>
+  </div>
+
+  <div id="listView"></div>
+  <div id="timelineView" style="display:none;"></div>
+</main>
+
+<footer>
+  Datos extraídos del programa oficial <a href="https://www.instagram.com/etnosur/">Etnosur 2026</a> · Alcalá la Real, Jaén.<br>
+  ⚠️ No se ha incluido la programación del jueves <br>
+  Programación sujeta a cambios por la organización de Etnosur.<br>
+  Horarios y ubicaciones pueden sufrir cambios según desarrollo del festival.<br><br><br><br>
+
+
+  Realizado por <a href="https://www.instagram.com/yosahn/">Yosahn</a> para intentar mejorar nuestra experiencia en Etnosur 🙏 <br>
+</footer>
+
+<script>
+const DATA = {
+  viernes: [
+    {t:"10:00",cat:"taller",title:"Viaje por los 4 elementos a través del yoga & vibración",place:"Plaza del Ayuntamiento",artist:"Elena Sánchez (Centro Bôsukha)",meta:"Aforo 50 · A partir de 15 años"},
+    {t:"10:30",cat:"taller",title:"Nendo Dango",place:"Paseo de los Álamos",artist:"Ecoluciona",meta:"Aforo 25 · 🧒🏾 A partir de 4 años"},
+    {t:"10:30",cat:"taller",title:"Construcción de instrumentos con caña",place:"Paseo de los Álamos",artist:"Ecoluciona",meta:"Aforo 25 · 🧒🏾 A partir de 4 años"},
+    {t:"10:30",cat:"taller",title:"Caligrafía",place:"Lonja Convento de Capuchinos",artist:"Scriptorium Yayyan",meta:"Aforo 25"},
+    {t:"10:30",cat:"taller",title:"Muñecas Abayomi",place:"Lonja Convento de Capuchinos",artist:"Mamá África",meta:"Aforo 25 · 👧 A partir de 7 años"},
+    {t:"11:00",cat:"narracion",title:"Blanco sobre blanco (Narración infantil)",place:"Convento de Capuchinos",artist:"Nono Granero",meta:"Aforo 150"},
+    {t:"12:00",cat:"taller",title:"Ritmos latinos",place:"Templete Paseo de los Álamos",artist:"María Sánchez",meta:"Aforo 25"},
+    {t:"12:30",cat:"taller",title:"Mini-hotel de insectos",place:"Paseo de los Álamos",artist:"Ecoluciona",meta:"Aforo 25 · 🧒🏾 A partir de 4 años"},
+    {t:"12:30",cat:"taller",title:"Explosión de colores: crea tus calcetines Tie Dye",place:"Paseo de los Álamos",artist:"TintArte Tie Dye",meta:"Aforo 25 · De 5 a 14 años"},
+    {t:"12:30",cat:"taller",title:"Moda y sostenibilidad",place:"Convento de Capuchinos",artist:"María Jesús Pérez",meta:"Aforo 25 · A partir de 16 años"},
+    {t:"12:30",cat:"taller",title:"Moral en el arte urbano",place:"Lonja Convento de Capuchinos",artist:"Serengueti Art",meta:"Aforo 25 · 👦🏻 A partir de 6 años"},
+    {t:"12:30",cat:"foro",title:"Hablemos del clima futuro: recursos hídricos y adaptación a la nueva realidad del cambio climático",place:"Palacio Abacial",artist:"Juan Antonio Carazo (CEO de Andalmet)",meta:"Aforo 80"},
+    {t:"14:00",cat:"musica",title:"Ben Zabo",place:"Plaza del Ayuntamiento"},
+    {t:"15:30",cat:"etnochill",title:"Castora Herz DJ",place:"Plaza del Ayuntamiento"},
+    {t:"17:30",cat:"etnochill",title:"María Calaveras",place:"Paseo de los Álamos"},
+    {t:"18:00",cat:"taller",title:"«Migraciones de ida y vuelta». Memoria, derechos y convivencia",place:"Lonja Convento de Capuchinos",artist:"Asociación La Comunitaria",meta:"Aforo 25 · 👦🏻 A partir de 6 años"},
+    {t:"19:00",cat:"narracion",title:"Rayanas (Narración para adultos)",place:"Pub L@Lola",artist:"Irene Reina",meta:"Aforo 100"},
+    {t:"19:00",cat:"cine",title:"Mediterráneo",place:"Teatro Martínez Montañés",artist:"Marcel Barrena (2021)",meta:"Aforo 300"},
+    {t:"19:15",cat:"etnochill",title:"Dj Simpson",place:"Paseo de los Álamos"},
+    {t:"20:00",cat:"musica",title:"The Zawose Queens",place:"Plaza del Ayuntamiento"},
+    {t:"20:30",cat:"circo",title:"POI",place:"Patio CEIP Alonso Alcalá",artist:"Cía. D'Estro · presentado por Carolina Montoya"},
+    {t:"22:30",cat:"musica",title:"Los Van Van",place:"Recinto ferial"},
+    {t:"00:30",cat:"musica",title:"Fillas de Cassandra",place:"Recinto ferial"},
+    {t:"02:30",cat:"musica",title:"Ácido Pantera",place:"Recinto ferial"},
+    {t:"04:00",cat:"etnoteca",title:"Telephunken",place:"Recinto ferial"},
+  ],
+  sabado: [
+    {t:"10:00",cat:"taller",title:"Viaje por los 4 elementos a través del yoga & vibración",place:"Plaza del Ayuntamiento",artist:"Elena Sánchez (Centro Bôsukha)",meta:"Aforo 50 · A partir de 15 años"},
+    {t:"10:30",cat:"taller",title:"Nendo Dango",place:"Paseo de los Álamos",artist:"Ecoluciona",meta:"Aforo 25 · 🧒🏾 A partir de 4 años"},
+    {t:"10:30",cat:"taller",title:"Construcción de instrumentos con caña",place:"Paseo de los Álamos",artist:"Ecoluciona",meta:"Aforo 25 · 🧒🏾 A partir de 4 años"},
+    {t:"10:30",cat:"taller",title:"Caligrafía",place:"Lonja Convento de Capuchinos",artist:"Scriptorium Yayyan",meta:"Aforo 25"},
+    {t:"10:30",cat:"taller",title:"Muñecas Abayomi",place:"Lonja Convento de Capuchinos",artist:"Mamá África",meta:"Aforo 25 · 👧 A partir de 7 años"},
+    {t:"11:00",cat:"narracion",title:"Cuentos crudos (Narración infantil)",place:"Convento de Capuchinos",artist:"Irene Reina",meta:"Aforo 150"},
+    {t:"11:00",cat:"taller",title:"Circo (bola de equilibrio, mini trampolín, malabares, diábolo, rola bola y slackline)",place:"Silo",artist:"Cía. Vol'e Temps Circo Teatro",meta:"Aforo 200"},
+    {t:"12:00",cat:"taller",title:"Ritmos latinos",place:"Templete Paseo de los Álamos",artist:"María Sánchez",meta:"Aforo 25"},
+    {t:"12:00",cat:"foro",title:"Inmortalidad: vivir más, ¿vivir mejor? Avances científicos y retos sociales más allá de los límites",place:"Palacio Abacial",artist:"Juan Antonio Valor Yébenes, Antonio García Jiménez y Graziella Almendral",meta:"Aforo 80"},
+    {t:"12:30",cat:"taller",title:"Mini-hotel de insectos",place:"Lonja Convento de Capuchinos",artist:"Ecoluciona",meta:"Aforo 25 · 🧒🏾 A partir de 4 años"},
+    {t:"12:30",cat:"taller",title:"Explosión de colores: crea tus calcetines Tie Dye",place:"Lonja Convento de Capuchinos",artist:"TintArte Tie Dye",meta:"Aforo 25 · De 5 a 14 años"},
+    {t:"12:30",cat:"taller",title:"Moda y sostenibilidad",place:"Convento de Capuchinos",artist:"María Jesús Pérez",meta:"Aforo 25 · A partir de 16 años"},
+    {t:"12:30",cat:"taller",title:"Moral en el arte urbano",place:"Lonja Convento de Capuchinos",artist:"Serengueti Art",meta:"Aforo 25 · 👦🏻 A partir de 6 años"},
+    {t:"14:00",cat:"musica",title:"Lucky Salvadori",place:"Plaza del Ayuntamiento"},
+    {t:"15:30",cat:"etnochill",title:"Cous Cous",place:"Plaza del Ayuntamiento"},
+    {t:"17:30",cat:"etnochill",title:"Dj Borke",place:"Paseo de los Álamos"},
+    {t:"18:00",cat:"taller",title:"Ritmos gitanos: percusión flamenca",place:"Lonja Convento de Capuchinos",artist:"Asociación La Comunitaria",meta:"Aforo 15 · 👦🏻 A partir de 6 años"},
+    {t:"18:00",cat:"taller",title:"Serigrafía",place:"Convento de Capuchinos",artist:"Greenpeace",meta:"Aforo 15 · A partir de 8 años"},
+    {t:"19:00",cat:"narracion",title:"Contar con los amigos (Narración para adultos)",place:"Pub L@Lola",artist:"Nono Granero",meta:"Aforo 100"},
+    {t:"19:00",cat:"cine",title:"Proyecto tiempo",place:"Teatro Martínez Montañés",artist:"Isabel Coixet (2018)"},
+    {t:"19:15",cat:"etnochill",title:"Giuseppe Beats",place:"Paseo de los Álamos"},
+    {t:"20:00",cat:"musica",title:"D'Chipen",place:"Plaza del Ayuntamiento"},
+    {t:"20:30",cat:"circo",title:"Cabaret",place:"Patio CEIP Alonso Alcalá",artist:"Cía. Zen del Sur, Cía. Andrea Ríos, Cía. Ymedio Teatro, Elenia Anastasaki (Cía. LaEleArt) y Cía. Arsa La Brasa · presentado por Carolina Montoya"},
+    {t:"22:30",cat:"musica",title:"Dhoad Gypsies of Rajasthan",place:"Recinto ferial"},
+    {t:"00:30",cat:"musica",title:"Kanazoé Orkestra",place:"Recinto ferial"},
+    {t:"02:30",cat:"musica",title:"Asian Dub Foundation",place:"Recinto ferial"},
+    {t:"04:00",cat:"etnoteca",title:"Marcos Boricua",place:"Recinto ferial"},
+  ],
+  domingo: [
+    {t:"10:00",cat:"taller",title:"Viaje por los 4 elementos a través del yoga & vibración",place:"Plaza del Ayuntamiento",artist:"Elena Sánchez (Centro Bôsukha)",meta:"Aforo 50 · A partir de 15 años"},
+    {t:"10:30",cat:"taller",title:"Nendo Dango",place:"Paseo de los Álamos",artist:"Ecoluciona",meta:"Aforo 25 · 🧒🏾 A partir de 4 años"},
+    {t:"10:30",cat:"taller",title:"Construcción de instrumentos con caña",place:"Paseo de los Álamos",artist:"Ecoluciona",meta:"Aforo 25 · 🧒🏾 A partir de 4 años"},
+    {t:"10:30",cat:"taller",title:"Caligrafía",place:"Lonja Convento de Capuchinos",artist:"Scriptorium Yayyan",meta:"Aforo 25"},
+    {t:"10:30",cat:"taller",title:"Muñecas Abayomi",place:"Lonja Convento de Capuchinos",artist:"Mamá África",meta:"Aforo 25 · 👧 A partir de 7 años"},
+    {t:"10:30",cat:"taller",title:"Serigrafía",place:"Convento de Capuchinos",artist:"Greenpeace",meta:"Aforo 15 · A partir de 8 años"},
+    {t:"11:00",cat:"taller",title:"Circo (bola de equilibrio, mini trampolín, malabares, diábolo, rola bola y slackline)",place:"Silo",artist:"Cía. Vol'e Temps Circo Teatro",meta:"Aforo 200"},
+    {t:"12:00",cat:"taller",title:"Ritmos latinos",place:"Templete Paseo de los Álamos",artist:"María Sánchez",meta:"Aforo 25"},
+    {t:"12:00",cat:"literatura",title:"Música y poesía (Aula de literatura)",place:"Teatro Martínez Montañés",artist:"Benjamín Prado y Shuarma",meta:"Aforo 300"},
+    {t:"12:00",cat:"taller",title:"Moral en el arte urbano",place:"Lonja Convento de Capuchinos",artist:"Serengueti Art",meta:"Aforo 25 · 👦🏻 A partir de 6 años"},
+    {t:"12:30",cat:"taller",title:"Mini-hotel de insectos",place:"Lonja Convento de Capuchinos",artist:"Ecoluciona",meta:"Aforo 25 · 🧒🏾 A partir de 4 años"},
+    {t:"12:30",cat:"taller",title:"Explosión de colores: crea tus calcetines Tie Dye",place:"Lonja Convento de Capuchinos",artist:"TintArte Tie Dye",meta:"Aforo 25 · De 5 a 14 años"},
+    {t:"12:30",cat:"taller",title:"Moda y sostenibilidad",place:"Convento de Capuchinos",artist:"María Jesús Pérez",meta:"Aforo 25 · A partir de 16 años"},
+    {t:"14:00",cat:"etnochill",title:"Nûra & Pierrot",place:"Paseo de los Álamos"},
+  ]
+};
+
+const CAT_LABELS = {
+  musica:"Música", taller:"Taller", etnochill:"Etnochill", narracion:"Narración",
+  cine:"Cine", circo:"Circo", foro:"Foro", literatura:"Aula de literatura", etnoteca:"Etnoteca"
+};
+
+let currentDay = "viernes";
+let currentView = "list";
+
+function timeSortValue(t){
+  let [h,m] = t.split(":").map(Number);
+  if(h < 9) h += 24; // after-midnight sets sort to the end of the festival day
+  return h*60+m;
+}
+
+function populateFilters(){
+  const stages = new Set(), cats = new Set();
+  Object.values(DATA).forEach(day=>day.forEach(ev=>{stages.add(ev.place); cats.add(ev.cat);}));
+  const stageSel = document.getElementById('stageFilter');
+  [...stages].sort().forEach(s=>{
+    const o = document.createElement('option'); o.value=s; o.textContent=s; stageSel.appendChild(o);
+  });
+  const catSel = document.getElementById('catFilter');
+  Object.keys(CAT_LABELS).forEach(c=>{
+    if(cats.has(c)){
+      const o = document.createElement('option'); o.value=c; o.textContent=CAT_LABELS[c]; catSel.appendChild(o);
+    }
+  });
+}
+
+function getFilteredEvents(){
+  const search = document.getElementById('searchInput').value.trim().toLowerCase();
+  const stage = document.getElementById('stageFilter').value;
+  const cat = document.getElementById('catFilter').value;
+  let events = [...DATA[currentDay]];
+  events.sort((a,b)=>timeSortValue(a.t)-timeSortValue(b.t));
+  return events.filter(ev=>{
+    if(stage && ev.place !== stage) return false;
+    if(cat && ev.cat !== cat) return false;
+    if(search){
+      const hay = (ev.title+" "+(ev.artist||"")+" "+ev.place).toLowerCase();
+      if(!hay.includes(search)) return false;
+    }
+    return true;
+  });
+}
+
+function renderList(){
+  const container = document.getElementById('listView');
+  const events = getFilteredEvents();
+  if(events.length===0){
+    container.innerHTML = '<div class="empty-msg">No hay actividades que coincidan con tu búsqueda 🔎</div>';
+    return;
+  }
+  let html = "";
+  let lastTime = null;
+  events.forEach(ev=>{
+    if(ev.t !== lastTime){
+      html += `<div class="time-label">${ev.t}h</div>`;
+      lastTime = ev.t;
+    }
+    html += `
+      <div class="card cat-${ev.cat}">
+        <div class="card-top">
+          <span class="badge">${CAT_LABELS[ev.cat]}</span>
+        </div>
+        <div class="card-title">${ev.title}</div>
+        ${ev.artist ? `<div class="card-artist">${ev.artist}</div>` : ""}
+        <div class="card-meta">
+          <span>📍 ${ev.place}</span>
+          ${ev.meta ? `<span>👥 ${ev.meta}</span>` : ""}
+        </div>
+      </div>`;
+  });
+  container.innerHTML = html;
+}
+
+function renderTimeline(){
+  const container = document.getElementById('timelineView');
+  const events = getFilteredEvents();
+  if(events.length===0){
+    container.innerHTML = '<div class="empty-msg">No hay actividades que coincidan con tu búsqueda 🔎</div>';
+    return;
+  }
+  const venues = [...new Set(events.map(e=>e.place))];
+  const hours = [];
+  for(let h=10; h<=28; h++) hours.push(h);
+
+  let gridCols = `118px repeat(${hours.length}, 62px)`;
+  let html = `<div class="timeline-wrap"><div class="timeline" style="grid-template-columns:${gridCols}">`;
+
+  // header row
+  html += `<div class="tl-cell tl-venuelabel" style="position:sticky;left:0;top:0;z-index:6;">Escenario</div>`;
+  hours.forEach(h=>{
+    const label = h>=24 ? String(h-24).padStart(2,'0')+"h" : String(h).padStart(2,'0')+"h";
+    html += `<div class="tl-cell tl-hourlabel">${label}</div>`;
+  });
+
+  venues.forEach(venue=>{
+    html += `<div class="tl-cell tl-venuelabel">${venue}</div>`;
+    hours.forEach(h=>{
+      const match = events.find(ev=>{
+        if(ev.place!==venue) return false;
+        let [eh] = ev.t.split(":").map(Number);
+        if(eh < 9) eh += 24;
+        return eh === h;
+      });
+      if(match){
+        html += `<div class="tl-cell" style="padding:2px;"><div class="tl-block cat-${match.cat}" style="background:var(--maroon);" title="${match.t}h · ${match.title} · ${match.place}"><b>${match.t}</b>${match.title}</div></div>`;
+      } else {
+        html += `<div class="tl-cell"></div>`;
+      }
+    });
+  });
+
+  html += `</div></div>`;
+  container.innerHTML = html;
+
+  // apply category colors to timeline blocks after render
+  container.querySelectorAll('.tl-block').forEach(el=>{
+    const catClass = [...el.classList].find(c=>c.startsWith('cat-'));
+    const cat = catClass ? catClass.replace('cat-','') : null;
+    const colorMap = {musica:'var(--red)',taller:'var(--green)',etnochill:'var(--teal)',narracion:'var(--gold)',cine:'var(--maroon)',circo:'var(--pink)',foro:'var(--orange)',literatura:'var(--purple)',etnoteca:'var(--blue)'};
+    if(cat && colorMap[cat]) el.style.background = colorMap[cat];
+    if(cat==='narracion') el.style.color = 'var(--ink)';
+  });
+}
+
+function render(){
+  if(currentView==='list'){
+    document.getElementById('listView').style.display='block';
+    document.getElementById('timelineView').style.display='none';
+    renderList();
+  } else {
+    document.getElementById('listView').style.display='none';
+    document.getElementById('timelineView').style.display='block';
+    renderTimeline();
+  }
+}
+
+document.getElementById('dayNav').addEventListener('click', e=>{
+  const btn = e.target.closest('button');
+  if(!btn) return;
+  currentDay = btn.dataset.day;
+  document.querySelectorAll('#dayNav button').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  render();
+});
+
+document.querySelector('.view-toggle').addEventListener('click', e=>{
+  const btn = e.target.closest('button');
+  if(!btn) return;
+  currentView = btn.dataset.view;
+  document.querySelectorAll('.view-toggle button').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  render();
+});
+
+document.getElementById('searchInput').addEventListener('input', render);
+document.getElementById('stageFilter').addEventListener('change', render);
+document.getElementById('catFilter').addEventListener('change', render);
+
+populateFilters();
+render();
+</script>
+</body>
+</html> 
